@@ -1,0 +1,192 @@
+[
+ {
+  "id": "cartografia_general_pbot",
+  "titulo": "Cartografía general (PBOT)",
+  "tema": "General",
+  "descripcion": null,
+  "fuente": null,
+  "georreferenciado": null,
+  "imagen": "mapas/cartografia_general_pbot.webp",
+  "miniatura": "mapas/cartografia_general_pbot_t.webp"
+ },
+ {
+  "id": "cartografia_historica_1943",
+  "titulo": "Cartografía histórica de 1943",
+  "tema": "Histórica",
+  "descripcion": "Documento cartográfico anterior a la primera imagen de satélite (1977); sirve de contexto histórico.",
+  "fuente": null,
+  "georreferenciado": null,
+  "imagen": "mapas/cartografia_historica_1943.webp",
+  "miniatura": "mapas/cartografia_historica_1943_t.webp"
+ },
+ {
+  "id": "dr_1_hidrografia_rural",
+  "titulo": "DR-1 Hidrografía rural",
+  "tema": "Ambiente y recursos naturales",
+  "descripcion": null,
+  "fuente": null,
+  "georreferenciado": null,
+  "imagen": "mapas/dr_1_hidrografia_rural.webp",
+  "miniatura": "mapas/dr_1_hidrografia_rural_t.webp"
+ },
+ {
+  "id": "dr_2_areas_de_interes_ambiental_rural",
+  "titulo": "DR-2 Áreas de interés ambiental rural",
+  "tema": "Ambiente y recursos naturales",
+  "descripcion": null,
+  "fuente": null,
+  "georreferenciado": null,
+  "imagen": "mapas/dr_2_areas_de_interes_ambiental_rural.webp",
+  "miniatura": "mapas/dr_2_areas_de_interes_ambiental_rural_t.webp"
+ },
+ {
+  "id": "dr_4_geologia_rural",
+  "titulo": "DR-4 Geología rural",
+  "tema": "Ambiente y recursos naturales",
+  "descripcion": null,
+  "fuente": null,
+  "georreferenciado": null,
+  "imagen": "mapas/dr_4_geologia_rural.webp",
+  "miniatura": "mapas/dr_4_geologia_rural_t.webp"
+ },
+ {
+  "id": "dr_5_pendientes_rural",
+  "titulo": "DR-5 Pendientes rural",
+  "tema": "Ambiente y recursos naturales",
+  "descripcion": null,
+  "fuente": null,
+  "georreferenciado": null,
+  "imagen": "mapas/dr_5_pendientes_rural.webp",
+  "miniatura": "mapas/dr_5_pendientes_rural_t.webp"
+ },
+ {
+  "id": "dr_6_zonificacion_de_amenazas_rural",
+  "titulo": "DR-6 Zonificación de amenazas rural",
+  "tema": "Ambiente y recursos naturales",
+  "descripcion": null,
+  "fuente": null,
+  "georreferenciado": null,
+  "imagen": "mapas/dr_6_zonificacion_de_amenazas_rural.webp",
+  "miniatura": "mapas/dr_6_zonificacion_de_amenazas_rural_t.webp"
+ },
+ {
+  "id": "dr_7_zonificacion_agroclimatica_rural",
+  "titulo": "DR-7 Zonificación agroclimática rural",
+  "tema": "Ambiente y recursos naturales",
+  "descripcion": null,
+  "fuente": null,
+  "georreferenciado": null,
+  "imagen": "mapas/dr_7_zonificacion_agroclimatica_rural.webp",
+  "miniatura": "mapas/dr_7_zonificacion_agroclimatica_rural_t.webp"
+ },
+ {
+  "id": "dr_8_uso_y_cobertura_actual_rural",
+  "titulo": "DR-8 Uso y cobertura actual rural",
+  "tema": "Uso y ocupación del territorio",
+  "descripcion": null,
+  "fuente": null,
+  "georreferenciado": null,
+  "imagen": "mapas/dr_8_uso_y_cobertura_actual_rural.webp",
+  "miniatura": "mapas/dr_8_uso_y_cobertura_actual_rural_t.webp"
+ },
+ {
+  "id": "dr_9_clases_agrologicas_rural",
+  "titulo": "DR-9 Clases agrológicas rural",
+  "tema": "Ambiente y recursos naturales",
+  "descripcion": null,
+  "fuente": null,
+  "georreferenciado": null,
+  "imagen": "mapas/dr_9_clases_agrologicas_rural.webp",
+  "miniatura": "mapas/dr_9_clases_agrologicas_rural_t.webp"
+ },
+ {
+  "id": "dr_11_conflicto_de_uso_rural",
+  "titulo": "DR-11 Conflicto de uso rural",
+  "tema": "Uso y ocupación del territorio",
+  "descripcion": null,
+  "fuente": null,
+  "georreferenciado": null,
+  "imagen": "mapas/dr_11_conflicto_de_uso_rural.webp",
+  "miniatura": "mapas/dr_11_conflicto_de_uso_rural_t.webp"
+ },
+ {
+  "id": "dr_12_equipamientos_colectivos_y_espacio_publico_rural",
+  "titulo": "DR-12 Equipamientos colectivos y espacio público rural",
+  "tema": "Equipamientos y espacio público",
+  "descripcion": null,
+  "fuente": null,
+  "georreferenciado": null,
+  "imagen": "mapas/dr_12_equipamientos_colectivos_y_espacio_publico_rural.webp",
+  "miniatura": "mapas/dr_12_equipamientos_colectivos_y_espacio_publico_rural_t.webp"
+ },
+ {
+  "id": "dr_14_tamano_predial_en_zona_industrial",
+  "titulo": "DR-14 Tamaño predial en zona industrial",
+  "tema": "Uso y ocupación del territorio",
+  "descripcion": null,
+  "fuente": null,
+  "georreferenciado": null,
+  "imagen": "mapas/dr_14_tamano_predial_en_zona_industrial.webp",
+  "miniatura": "mapas/dr_14_tamano_predial_en_zona_industrial_t.webp"
+ },
+ {
+  "id": "dr_15_division_politico_administrativa_rural",
+  "titulo": "DR-15 División político-administrativa rural",
+  "tema": "División administrativa",
+  "descripcion": null,
+  "fuente": null,
+  "georreferenciado": null,
+  "imagen": "mapas/dr_15_division_politico_administrativa_rural.webp",
+  "miniatura": "mapas/dr_15_division_politico_administrativa_rural_t.webp"
+ },
+ {
+  "id": "dr_16_modelo_actual_de_ocupacion_del_territorio",
+  "titulo": "DR-16 Modelo actual de ocupación del territorio",
+  "tema": "Uso y ocupación del territorio",
+  "descripcion": null,
+  "fuente": null,
+  "georreferenciado": null,
+  "imagen": "mapas/dr_16_modelo_actual_de_ocupacion_del_territorio.webp",
+  "miniatura": "mapas/dr_16_modelo_actual_de_ocupacion_del_territorio_t.webp"
+ },
+ {
+  "id": "du_1_uso_del_suelo_actual_urbano",
+  "titulo": "DU-1 Uso del suelo actual urbano",
+  "tema": "Uso y ocupación del territorio",
+  "descripcion": null,
+  "fuente": null,
+  "georreferenciado": null,
+  "imagen": "mapas/du_1_uso_del_suelo_actual_urbano.webp",
+  "miniatura": "mapas/du_1_uso_del_suelo_actual_urbano_t.webp"
+ },
+ {
+  "id": "du_2_uso_del_suelo_actual_centros_poblados",
+  "titulo": "DU-2 Uso del suelo actual en centros poblados",
+  "tema": "Uso y ocupación del territorio",
+  "descripcion": null,
+  "fuente": null,
+  "georreferenciado": null,
+  "imagen": "mapas/du_2_uso_del_suelo_actual_centros_poblados.webp",
+  "miniatura": "mapas/du_2_uso_del_suelo_actual_centros_poblados_t.webp"
+ },
+ {
+  "id": "du_3_equipamientos_colectivos_espacio_publico_urbano",
+  "titulo": "DU-3 Equipamientos colectivos y espacio público urbano",
+  "tema": "Equipamientos y espacio público",
+  "descripcion": null,
+  "fuente": null,
+  "georreferenciado": null,
+  "imagen": "mapas/du_3_equipamientos_colectivos_espacio_publico_urbano.webp",
+  "miniatura": "mapas/du_3_equipamientos_colectivos_espacio_publico_urbano_t.webp"
+ },
+ {
+  "id": "tocancipa_rural",
+  "titulo": "Tocancipá rural",
+  "tema": "General",
+  "descripcion": null,
+  "fuente": null,
+  "georreferenciado": null,
+  "imagen": "mapas/tocancipa_rural.webp",
+  "miniatura": "mapas/tocancipa_rural_t.webp"
+ }
+]

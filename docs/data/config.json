@@ -1,0 +1,236 @@
+{
+ "titulo": "De la labranza a la expansión: La Transformación Territorial de Tocancipá",
+ "institucion": "Universidad Distrital Francisco José de Caldas",
+ "centro": [
+  4.97,
+  -73.92
+ ],
+ "zoom": 12,
+ "rutas": {
+  "capas": "capas/",
+  "vectores": "vectores/",
+  "limites_png": "capas/limites_png.json",
+  "sitios": "data/sitios_sagrados.geojson",
+  "areas_vereda": "data/areas_vereda.json"
+ },
+ "capas_raster": [
+  {
+   "id": "cobertura_1977",
+   "tipo": "cobertura",
+   "anio": 1977,
+   "fecha": "7 de enero de 1977",
+   "sensor": "Landsat 1 MSS",
+   "resolucion": "60 m",
+   "compuesto": "B7 - B5 - B4 (falso color)",
+   "nivel": "Nivel 1 (L1TP), sin corrección atmosférica",
+   "umm": "unas 3,6 ha",
+   "nota": "A 60 m no se detectó zona industrial/minera. Las nubes de la imagen se asignaron a Cultivos y pastos, porque bajo ellas hay cultivos."
+  },
+  {
+   "id": "cobertura_2000",
+   "tipo": "cobertura",
+   "anio": 2000,
+   "fecha": "31 de marzo de 2000",
+   "sensor": "Landsat 5 TM",
+   "resolucion": "30 m",
+   "compuesto": "B4 - B3 - B2 (falso color)",
+   "nivel": "Nivel 1 (L1TP), sin corrección atmosférica",
+   "umm": "unas 0,9 ha",
+   "nota": "Imagen de finales de marzo, cuando suele comenzar la primera temporada de lluvias; las otras tres fechas son de enero (época seca)."
+  },
+  {
+   "id": "cobertura_2015",
+   "tipo": "cobertura",
+   "anio": 2015,
+   "fecha": "4 de enero de 2015",
+   "sensor": "Landsat 8 OLI",
+   "resolucion": "30 m",
+   "compuesto": "B5 - B4 - B3 (falso color)",
+   "nivel": "Nivel 2 (L2SP), con corrección atmosférica",
+   "umm": "unas 0,9 ha",
+   "nota": "Se corrigieron manualmente con Serval (QGIS) las zonas donde la clasificación automática confundía coberturas."
+  },
+  {
+   "id": "cobertura_2025",
+   "tipo": "cobertura",
+   "anio": 2025,
+   "fecha": "22 de enero de 2025",
+   "sensor": "Sentinel-2 MSI, nivel L2A",
+   "resolucion": "10 m",
+   "compuesto": "B08 - B04 - B03 (falso color)",
+   "nivel": "Nivel 2A, con corrección atmosférica",
+   "umm": "unas 0,1 ha",
+   "nota": "Se corrigieron manualmente con Serval (QGIS) las zonas donde la clasificación automática confundía coberturas. Las cifras de área de 2025 corresponden a la versión a 30 m, comparable con las demás fechas."
+  },
+  {
+   "id": "cambio_1977_2025",
+   "tipo": "cambio",
+   "anio": null,
+   "fecha": "1977 a 2025",
+   "sensor": "Comparación de las coberturas de 1977 y 2025",
+   "resolucion": "60 m a 30 m",
+   "compuesto": "",
+   "nivel": "",
+   "umm": "",
+   "nota": "Muestra solo el cambio total, no las fechas intermedias. Las categorías son excluyentes: si un píxel era vegetación y hoy es zona urbana o industrial/minera, cuenta como zona nueva y no como pérdida de vegetación. Por eso la pérdida del mapa (1.907 ha) es menor que la caída neta de la tabla (1.924 ha)."
+  }
+ ],
+ "capas_vector": [
+  {
+   "id": "limite_municipal",
+   "nombre": "Límite municipal",
+   "archivo": "limite_municipal.geojson",
+   "publicar": true,
+   "activa": true,
+   "color": "#1b4332",
+   "descripcion": "Límite de Tocancipá.",
+   "fuente": "IGAC, suministrado por la Secretaría de Planeación de Tocancipá"
+  },
+  {
+   "id": "division_veredal",
+   "nombre": "División veredal",
+   "archivo": "division_veredal.geojson",
+   "publicar": true,
+   "activa": false,
+   "color": "#8d6e63",
+   "descripcion": "Límites de las veredas de Tocancipá.",
+   "fuente": "Secretaría de Planeación de Tocancipá"
+  },
+  {
+   "id": "poligono_minero",
+   "nombre": "Polígono minero (Resolución 2001-2016)",
+   "archivo": "poligono_minero.geojson",
+   "publicar": true,
+   "activa": false,
+   "color": "#6f42c1",
+   "descripcion": "Área de la Resolución de 2001 a 2016.",
+   "fuente": "Secretaría de Planeación de Tocancipá"
+  },
+  {
+   "id": "modelo_ocupacion",
+   "nombre": "Modelo de ocupación (Acuerdo 09 de 2010)",
+   "archivo": "modelo_ocupacion.geojson",
+   "publicar": false,
+   "activa": false,
+   "color": "#b5651d",
+   "descripcion": "Modelo de ocupación del territorio del Acuerdo 09 de 2010. Capa de consulta, no sustituye la información oficial.",
+   "fuente": "Secretaría de Planeación de Tocancipá",
+   "motivo_oculta": "La ficha técnica deja pendiente confirmar con la Secretaría de Planeación si puede publicarse en un geovisor abierto."
+  }
+ ],
+ "clases_cobertura": [
+  {
+   "codigo": 1,
+   "nombre": "Vegetación natural",
+   "color": "#1d881f"
+  },
+  {
+   "codigo": 2,
+   "nombre": "Cultivos y pastos",
+   "color": "#c9e265"
+  },
+  {
+   "codigo": 3,
+   "nombre": "Zona urbana",
+   "color": "#d9534f"
+  },
+  {
+   "codigo": 4,
+   "nombre": "Zona industrial/minera",
+   "color": "#6f42c1"
+  }
+ ],
+ "clases_cambio": [
+  {
+   "codigo": 1,
+   "nombre": "Pérdida de vegetación natural",
+   "color": "#f0a030"
+  },
+  {
+   "codigo": 2,
+   "nombre": "Ganancia de vegetación natural",
+   "color": "#26a69a"
+  },
+  {
+   "codigo": 3,
+   "nombre": "Nueva zona urbana",
+   "color": "#d9534f"
+  },
+  {
+   "codigo": 4,
+   "nombre": "Nueva zona industrial/minera",
+   "color": "#6f42c1"
+  }
+ ],
+ "areas_ha": {
+  "fuente": "Ficha técnica, tabla de resultados principales (2025 corresponde a la versión a 30 m)",
+  "anios": [
+   1977,
+   2000,
+   2015,
+   2025
+  ],
+  "clases": [
+   {
+    "nombre": "Vegetación natural",
+    "color": "#1d881f",
+    "valores": [
+     3669,
+     2585,
+     1743,
+     1746
+    ],
+    "cambio": "−1.924 (−52 %)"
+   },
+   {
+    "nombre": "Cultivos y pastos",
+    "color": "#c9e265",
+    "valores": [
+     3454,
+     4358,
+     4907,
+     4917
+    ],
+    "cambio": "+1.463 (+42 %)"
+   },
+   {
+    "nombre": "Zona urbana",
+    "color": "#d9534f",
+    "valores": [
+     41,
+     95,
+     204,
+     240
+    ],
+    "cambio": "+199"
+   },
+   {
+    "nombre": "Zona industrial/minera",
+    "color": "#6f42c1",
+    "valores": [
+     0,
+     165,
+     379,
+     449
+    ],
+    "cambio": "+449"
+   }
+  ]
+ },
+ "hero": [
+  "img/fondos/hero1.webp",
+  "img/fondos/hero2.webp",
+  "img/fondos/hero3.webp",
+  "img/fondos/hero4.webp",
+  "img/fondos/hero5.webp"
+ ],
+ "bandas": {
+  "cartografia": "img/fondos/hero2.webp",
+  "sitios": "img/fondos/cueva.webp",
+  "galeria": "img/fondos/hero5.webp",
+  "normatividad": "img/fondos/valle.webp",
+  "arte": "img/fondos/hero3.webp",
+  "metodologia": "img/fondos/hero1.webp"
+ },
+ "radio_zona_m": 300
+}

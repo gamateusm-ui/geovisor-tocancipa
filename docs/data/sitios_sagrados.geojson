@@ -1,0 +1,107 @@
+{
+ "type": "FeatureCollection",
+ "features": [
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -73.914,
+     4.937
+    ]
+   },
+   "properties": {
+    "id": "entrada_de_los_espiritus",
+    "nombre": "Entrada de los Espíritus",
+    "descripcion": "Esta es una piedra ubicada cerca a la piedra cuadrada en donde se dice que es la entrada para la montaña y por allí entran los espíritus, se dice que el Cerro Canavita se encuentra encantado.",
+    "imagen": "img/sitios/entrada_de_los_espiritus.webp",
+    "fuente": "Descripción del Excel «Sitios sagrados» elaborado para el trabajo de grado",
+    "ubicacion": "aproximada",
+    "coordenada_publicable": true,
+    "nota_interna": null
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -73.889,
+     4.953
+    ]
+   },
+   "properties": {
+    "id": "piedra_cuadrada",
+    "nombre": "Piedra Cuadrada",
+    "descripcion": "Esta piedra era el sitio para la realización de ofrendas y sacrificios de animales y productos recolectados en cosecha, estas se realizaban ante los Espíritus Guardianes.",
+    "imagen": "img/sitios/piedra_cuadrada.webp",
+    "fuente": "Descripción del Excel «Sitios sagrados» elaborado para el trabajo de grado",
+    "ubicacion": "aproximada",
+    "coordenada_publicable": true,
+    "nota_interna": null
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": null,
+   "properties": {
+    "id": "piedra_de_los_lamentos",
+    "nombre": "Piedra de los Lamentos",
+    "descripcion": "Este era el lugar de castigo para los indígenas que cometían faltas graves, al llegar los españoles se decía que en ese lugar se escuchaban lamentos en las noches por lo que pusieron una cruz.",
+    "imagen": "img/sitios/piedra_de_los_lamentos.webp",
+    "fuente": "Descripción del Excel «Sitios sagrados» elaborado para el trabajo de grado",
+    "ubicacion": null,
+    "coordenada_publicable": false,
+    "nota_interna": "El Excel no trae coordenadas."
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": null,
+   "properties": {
+    "id": "pozo_de_la_ofrendas",
+    "nombre": "Pozo de las Ofrendas",
+    "descripcion": "Este era el lugar de recibimiento de la comunidad indígena al Zipa cuando venía a visitar a Toquenzipe, este era un punto de encuentro comunitario para las celebraciones, allí también se depositaban ofrendas.",
+    "imagen": "img/sitios/pozo_de_la_ofrendas.webp",
+    "fuente": "Descripción del Excel «Sitios sagrados» elaborado para el trabajo de grado",
+    "ubicacion": null,
+    "coordenada_publicable": false,
+    "nota_interna": "El Excel no trae coordenadas."
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -73.914,
+     4.937
+    ]
+   },
+   "properties": {
+    "id": "quebrada_honda",
+    "nombre": "Quebrada Honda",
+    "descripcion": "Esta quebrada es un lugar fundamental para la comunidad indígena especialmente para la continuidad de la vida y las familias, ya que este era el lugar en donde se realizaban los partos, debido a que la forma de una de las piedras de la quebrada permitía que la mujer quedara sentada en el agua fría facilitando el ejercicio del parto. También, como menciona Don Casimiro se cree que este lugar tiene una forma de vagina por lo que este lugar contiene toda una espiritualidad alrededor de la vida. Además de ello, se dice que en ella habita aún hoy el Mohan, que baja cada 7 años a hacer trueques e intercambios con el Mohan de Nemocón.",
+    "imagen": "img/sitios/quebrada_honda.webp",
+    "fuente": "Descripción del Excel «Sitios sagrados» elaborado para el trabajo de grado",
+    "ubicacion": "aproximada",
+    "coordenada_publicable": true,
+    "nota_interna": null
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": null,
+   "properties": {
+    "id": "cueva_del_indio",
+    "nombre": "Cueva del Indio",
+    "descripcion": "Este es el lugar en que habitan los Mohanes que son los duendes de la comunidad indígena. Cuentan los mayores que un día los Mohanes de Tocancipá hicieron una apuesta con los Mohanes de Guatavita y les ganaron los Mohanes de Guatavita por lo que los Mohanes de Tocancipá se tuvieron que trasladar del municipio a Guatavita con toda su riqueza. Desde entonces, la comunidad indígena realiza rituales y ofrendas en el lugar para que ellos vuelvan. En los tiempos de la colonia, al ver los españoles que la comunidad se reunía en este lugar a realizar pagamentos, satanizaron la situación apelando que “esas eran cosas del diablo” y por ello la mal llamaron “Cueva del diablo”.",
+    "imagen": "img/sitios/cueva_del_indio.webp",
+    "fuente": "Descripción del Excel «Sitios sagrados» elaborado para el trabajo de grado",
+    "ubicacion": null,
+    "coordenada_publicable": false,
+    "nota_interna": "Su coordenada es idéntica a la de «Entrada de los Espiritus»: parece copiada; confirmar."
+   }
+  }
+ ]
+}

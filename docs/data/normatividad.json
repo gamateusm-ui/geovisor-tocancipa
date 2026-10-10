@@ -1,0 +1,110 @@
+[
+ {
+  "id": "actualizacion_tocancipa_ap_",
+  "titulo": "Proceso de actualización y conservación catastral, Tocancipá (Cundinamarca)",
+  "tema": "Catastro y tierras",
+  "tipo": "Guía y material de apoyo",
+  "entidad": null,
+  "anio": null,
+  "descripcion": "Presentación que explica el catastro y cita el Decreto 148 de 2020 y la Resolución 1149 de 2021.",
+  "vigencia": null,
+  "pdf": "normatividad/actualizacion_tocancipa_ap_.pdf",
+  "publicar_pdf": true
+ },
+ {
+  "id": "clarificacion_de_la_vigencia_legal_de_los_titulos_de_origen_colonial_ap_",
+  "titulo": "Clarificación de la vigencia legal de los títulos de origen colonial o republicano de los resguardos indígenas (procedimiento SEJUT-P-009)",
+  "tema": "Resguardos y títulos",
+  "tipo": "Procedimiento o instrucción",
+  "entidad": null,
+  "anio": "2022",
+  "descripcion": "Versión 1 del 22 de febrero de 2022. Desarrolla las actividades establecidas en el Decreto 1824 de 2020.",
+  "vigencia": "Vigencia por verificar",
+  "pdf": "normatividad/clarificacion_de_la_vigencia_legal_de_los_titulos_de_origen_colonial_ap_.pdf",
+  "publicar_pdf": true
+ },
+ {
+  "id": "clarificacion_de_titulos",
+  "titulo": "Instrucción administrativa conjunta sobre inscripción de actos de clarificación de títulos de resguardos de origen colonial",
+  "tema": "Resguardos y títulos",
+  "tipo": "Procedimiento o instrucción",
+  "entidad": "Superintendencia de Notariado y Registro e INCODER",
+  "anio": "2013",
+  "descripcion": "Fechada en junio de 2013.",
+  "vigencia": "Vigencia por verificar",
+  "pdf": "normatividad/clarificacion_de_titulos.pdf",
+  "publicar_pdf": true
+ },
+ {
+  "id": "documento_tecnico_parte_1",
+  "titulo": "Revisión y ajuste del Plan de Ordenamiento Territorial: documento de seguimiento y evaluación, parte 1",
+  "tema": "Planeación y ordenamiento",
+  "tipo": "Instrumento de planeación",
+  "entidad": "Municipio de Tocancipá",
+  "anio": "2009",
+  "descripcion": "Documento de marzo de 2009.",
+  "vigencia": "Vigencia por verificar",
+  "pdf": "normatividad/documento_tecnico_parte_1.pdf",
+  "publicar_pdf": true
+ },
+ {
+  "id": "eot_tocancipa",
+  "titulo": "Plan de Ordenamiento Territorial 1998–2006, municipio de Tocancipá (fichas guía)",
+  "tema": "Planeación y ordenamiento",
+  "tipo": "Instrumento de planeación",
+  "entidad": "Municipio de Tocancipá",
+  "anio": "1998",
+  "descripcion": null,
+  "vigencia": "Vigencia por verificar",
+  "pdf": "normatividad/eot_tocancipa.pdf",
+  "publicar_pdf": true
+ },
+ {
+  "id": "escuela_ambiental_del_pueblo_ap_",
+  "titulo": "Quyca Mhuyscac Chibchichuanyngaco (Aprendamos del territorio Mhuysqa): Escuela Ambiental del Pueblo Indígena Mhuysqa",
+  "tema": "Pueblo Mhuysqa y territorio",
+  "tipo": "Guía y material de apoyo",
+  "entidad": null,
+  "anio": null,
+  "descripcion": "Cartilla con módulos sobre conceptos, gobierno propio y resguardos y cabildos del pueblo Mhuysqa de la Sabana de Bogotá.",
+  "vigencia": null,
+  "pdf": "normatividad/escuela_ambiental_del_pueblo_ap_.pdf",
+  "publicar_pdf": true
+ },
+ {
+  "id": "estadisticos_tocancipa",
+  "titulo": "Ficha territorial de Tocancipá (TerriData)",
+  "tema": "Información estadística",
+  "tipo": "Información estadística",
+  "entidad": "Departamento Nacional de Planeación (DNP)",
+  "anio": "2026",
+  "descripcion": "Generada el 7 de julio de 2026. Código DIVIPOLA 25817.",
+  "vigencia": null,
+  "pdf": "normatividad/estadisticos_tocancipa.pdf",
+  "publicar_pdf": true
+ },
+ {
+  "id": "guia_para_la_legalizacion_ap_",
+  "titulo": "Guía para la legalización territorial indígena: procesos de constitución y ampliación de resguardos en Colombia",
+  "tema": "Resguardos y títulos",
+  "tipo": "Guía y material de apoyo",
+  "entidad": "Amazon Conservation Team",
+  "anio": "2018",
+  "descripcion": "Primera versión digital, enero de 2018.",
+  "vigencia": null,
+  "pdf": "normatividad/guia_para_la_legalizacion_ap_.pdf",
+  "publicar_pdf": true
+ },
+ {
+  "id": "paln_economico_toca_ap_",
+  "titulo": "Plan económico para la competitividad del municipio de Tocancipá 2009–2019",
+  "tema": "Planeación y ordenamiento",
+  "tipo": "Instrumento de planeación",
+  "entidad": null,
+  "anio": "2009",
+  "descripcion": null,
+  "vigencia": "Vigencia por verificar",
+  "pdf": "normatividad/paln_economico_toca_ap_.pdf",
+  "publicar_pdf": true
+ }
+]

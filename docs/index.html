@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>De la labranza a la expansión: La Transformación Territorial de Tocancipá</title>
+<meta name="description" content="Cómo cambió la cobertura de la tierra en Tocancipá entre 1977 y 2025: geovisor, cartografía, sitios sagrados y metodología.">
+<meta name="theme-color" content="#14322c">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&family=Young+Serif&display=swap">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<a class="saltar" href="#contenido">Saltar al contenido</a>
+
+<header class="cabecera">
+  <span class="marca" id="marca">De la labranza a la expansión: La Transformación Territorial de Tocancipá</span>
+  <nav aria-label="Secciones del StoryMap">
+    <div class="pestanas" role="tablist" id="pestanas">
+      <button role="tab" data-tab="inicio">Inicio</button>
+      <button role="tab" data-tab="geovisor">Geovisor</button>
+      <button role="tab" data-tab="cartografia">Cartografía temática</button>
+      <button role="tab" data-tab="sitios">Territorio y sitios sagrados</button>
+      <button role="tab" data-tab="galeria">Galería de campo</button>
+      <button role="tab" data-tab="normatividad">Normatividad</button>
+      <button role="tab" data-tab="arte">Estado del arte</button>
+      <button role="tab" data-tab="metodologia">Metodología</button>
+    </div>
+  </nav>
+</header>
+
+<main id="contenido">
+  <section id="tab-inicio" class="panel" role="tabpanel" hidden></section>
+
+  <section id="tab-geovisor" class="panel panel-visor" role="tabpanel" hidden>
+    <div class="visor-cab">
+      <div class="modo" role="group" aria-label="Modo del geovisor">
+        <button id="modo-linea" class="activo" aria-pressed="true">Línea de tiempo</button>
+        <button id="modo-comparar" aria-pressed="false">Comparar dos fechas</button>
+      </div>
+      <button id="btn-acerca" class="sec">Acerca de este visor</button>
+    </div>
+    <div class="visor">
+      <div class="visor-mapas" id="gv-mapas">
+        <div id="mapa-a" class="mapa" aria-label="Mapa de cobertura de la tierra de Tocancipá"></div>
+        <div id="mapa-b" class="mapa" aria-label="Mapa de comparación" hidden></div>
+        <div id="gv-estado" class="estado" role="status" aria-live="polite"></div>
+        <div id="etq-a" class="etq-comp" hidden></div>
+        <div id="etq-b" class="etq-comp etq-b" hidden></div>
+        <div class="dock" id="gv-tiempo">
+          <div class="dock-fila">
+            <button id="t-ant" class="icono" aria-label="Fecha anterior">◀</button>
+            <div class="anios" id="t-marcas" role="group" aria-label="Fechas con datos"></div>
+            <button id="t-sig" class="icono" aria-label="Fecha siguiente">▶</button>
+            <button id="t-play" class="reproducir" aria-label="Reproducir">Reproducir</button>
+            <button id="t-cambio" class="cambio" aria-pressed="false">Cambio 1977 a 2025</button>
+          </div>
+          <input type="range" id="t-slider" min="0" max="3" step="1" value="0" aria-label="Año de la cobertura">
+          <p class="dock-nota">Solo hay cuatro fechas con datos. El visor salta de una a otra, sin inventar lo que pasó en medio.</p>
+        </div>
+      </div>
+      <aside class="lado" aria-label="Panel del geovisor">
+        <div class="bloque" id="caja-comparar" hidden>
+          <h2>Comparar</h2>
+          <label>Izquierda <select id="sel-a"></select></label>
+          <label>Derecha <select id="sel-b"></select></label>
+        </div>
+        <div class="bloque">
+          <h2 id="gv-titulo-capa" class="capa-titulo"></h2>
+          <div id="gv-leyenda"></div>
+          <label class="opac">Opacidad <input type="range" id="opacidad" min="0.1" max="1" step="0.05" value="0.85"></label>
+          <p class="pie-leyenda">Las imágenes tienen distinta resolución: 60 m en 1977, 30 m en 2000 y 2015, y 10 m en 2025. Por eso el detalle de los mapas no es igual entre fechas, y los cambios pequeños (menores a unas pocas hectáreas) no son confiables. En 1977 no se detecta zona industrial/minera, y las nubes de esa imagen quedaron en cultivos y pastos. Es una clasificación automática (k-means) verificada en campo visual con imágenes recientes, no un inventario oficial.</p>
+        </div>
+        <details class="bloque" open>
+          <summary>Ficha de la imagen</summary>
+          <dl id="gv-ficha" class="ficha"></dl>
+        </details>
+        <details class="bloque" open>
+          <summary>Capas de referencia</summary>
+          <div id="gv-vectores"></div>
+          <p class="pie-leyenda">El modelo de ocupación y el predial fueron suministrados por la Secretaría de Planeación de Tocancipá. Son capas de consulta, no sustituyen la información oficial.</p>
+        </details>
+      </aside>
+    </div>
+    <section class="areas" id="gv-graficos" aria-labelledby="areas-t">
+      <h2 id="areas-t">Hectáreas por clase</h2>
+      <div id="graf-areas"></div>
+      <div id="tabla-areas" class="tabla-scroll"></div>
+      <p class="nota-peq" id="fuente-areas"></p>
+    </section>
+  </section>
+
+  <section id="tab-cartografia" class="panel" role="tabpanel" hidden></section>
+  <section id="tab-sitios" class="panel" role="tabpanel" hidden></section>
+  <section id="tab-galeria" class="panel" role="tabpanel" hidden></section>
+  <section id="tab-normatividad" class="panel" role="tabpanel" hidden></section>
+  <section id="tab-arte" class="panel" role="tabpanel" hidden></section>
+  <section id="tab-metodologia" class="panel" role="tabpanel" hidden></section>
+</main>
+
+<footer class="pie">
+  <p><strong>Elaboración:</strong> Alejandra Segura Villarreal y Gabriela Mateus Munévar, Universidad Distrital Francisco José de Caldas. <strong>Imágenes:</strong> Landsat 1 (1977), Landsat 5 (2000), Landsat 8 (2015) y Sentinel-2 (2025). <strong>Capas vectoriales:</strong> Secretaría de Planeación de Tocancipá y fuentes citadas en la ficha técnica.</p>
+  <p class="nota-peq">Mapas base: © colaboradores de OpenStreetMap, Esri y OpenTopoMap, según el fondo elegido en el selector del mapa.</p>
+</footer>
+
+<dialog id="dlg-acerca" aria-labelledby="acerca-t">
+  <h2 id="acerca-t">Sobre este visor</h2>
+  <p id="acerca-texto"></p>
+  <button id="acerca-cerrar" class="sec">Cerrar</button>
+</dialog>
+<dialog id="dlg-foto" class="foto">
+  <button id="foto-cerrar" aria-label="Cerrar">Cerrar</button>
+  <button id="foto-ant" aria-label="Anterior">◀</button>
+  <figure><img id="foto-img" alt=""><figcaption><span id="foto-pie"></span> <a id="foto-abrir" href="#" target="_blank" rel="noopener">Abrir tamaño completo</a> <a id="foto-desc" href="#" download>Descargar</a></figcaption></figure>
+  <button id="foto-sig" aria-label="Siguiente">▶</button>
+</dialog>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
