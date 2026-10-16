@@ -246,3 +246,5 @@ dialog.foto button{position:absolute;top:50%;background:#000b;border-color:#fff4
 .leaflet-control-layers-expanded { padding: .5rem .7rem; color: var(--paramo, #14322c); }
 .leaflet-control-layers label { margin: .15rem 0; }
 .leaflet-touch .leaflet-control-layers-toggle { border-radius: .6rem; }
+
+.aviso-v{background:#f7ecd2;border-left:4px solid var(--oro);padding:.3rem .5rem;margin:.2rem 0 .4rem;font-size:.8rem}

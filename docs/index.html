@@ -10,7 +10,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&family=Young+Serif&display=swap">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/style.css?v=20261016">
 </head>
 <body>
 <a class="saltar" href="#contenido">Saltar al contenido</a>
@@ -55,7 +55,7 @@
             <div class="anios" id="t-marcas" role="group" aria-label="Fechas con datos"></div>
             <button id="t-sig" class="icono" aria-label="Fecha siguiente">▶</button>
             <button id="t-play" class="reproducir" aria-label="Reproducir">Reproducir</button>
-            <button id="t-cambio" class="cambio" aria-pressed="false">Cambio 1977 a 2025</button>
+            <button id="t-cambio" class="cambio" aria-pressed="false">Cambio estimado 1977 a 2025</button>
           </div>
           <input type="range" id="t-slider" min="0" max="3" step="1" value="0" aria-label="Año de la cobertura">
           <p class="dock-nota">Solo hay cuatro fechas con datos. El visor salta de una a otra, sin inventar lo que pasó en medio.</p>
@@ -71,7 +71,7 @@
           <h2 id="gv-titulo-capa" class="capa-titulo"></h2>
           <div id="gv-leyenda"></div>
           <label class="opac">Opacidad <input type="range" id="opacidad" min="0.1" max="1" step="0.05" value="0.85"></label>
-          <p class="pie-leyenda">Las imágenes tienen distinta resolución: 60 m en 1977, 30 m en 2000 y 2015, y 10 m en 2025. Por eso el detalle de los mapas no es igual entre fechas, y los cambios pequeños (menores a unas pocas hectáreas) no son confiables. En 1977 no se detecta zona industrial/minera, y las nubes de esa imagen quedaron en cultivos y pastos. Es una clasificación automática (k-means) verificada en campo visual con imágenes recientes, no un inventario oficial.</p>
+          <p class="pie-leyenda">Los mapas son estimaciones preliminares. Las imágenes tienen distinta resolución (60 m en 1977, 30 m en 2000 y 2015, y 10 m en 2025, llevada a 30 m para comparar) y por eso no tienen la misma precisión: los cambios pequeños no son confiables. En 1977 no se detecta zona industrial o minera (cobertura). Las nubes y sombras de 1977 y 2015 no se clasificaron y aparecen en gris. Es una clasificación automática (k-means) verificada visualmente con imágenes de referencia, sin medida estadística de exactitud; no es un inventario oficial.</p>
         </div>
         <details class="bloque" open>
           <summary>Ficha de la imagen</summary>
@@ -85,7 +85,7 @@
       </aside>
     </div>
     <section class="areas" id="gv-graficos" aria-labelledby="areas-t">
-      <h2 id="areas-t">Hectáreas por clase</h2>
+      <h2 id="areas-t">Cobertura estimada por clase (área comparada)</h2>
       <div id="graf-areas"></div>
       <div id="tabla-areas" class="tabla-scroll"></div>
       <p class="nota-peq" id="fuente-areas"></p>
@@ -118,6 +118,6 @@
 </dialog>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<script src="js/app.js"></script>
+<script src="js/app.js?v=20261016"></script>
 </body>
 </html>

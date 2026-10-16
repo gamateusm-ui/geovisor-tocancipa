@@ -1,14 +1,20 @@
 /* StoryMap Tocancipá. Sitio estático: todas las rutas salen de data/config.json y de los catálogos en data/. */
 (() => {
 'use strict';
+const VERSION = '20261016'; /* cambia este valor al actualizar archivos, para que el navegador no use copias viejas */
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const enc = p => String(p).split('/').map(encodeURIComponent).join('/');
 const norm = s => String(s).normalize('NFKD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_|_$/g, '');
 const fmt = n => Number(n).toLocaleString('es-CO', { maximumFractionDigits: 0 });
+/* Todas las cifras de superficie son estimaciones redondeadas; el visor no muestra valores exactos. */
+const ha = n => n === 0 ? 'no detectable' : '≈ ' + (n < 0 ? '−' : '+') + fmt(Math.abs(n)) + ' ha';
+const haAbs = n => n === 0 ? 'no detectable' : '≈ ' + fmt(n) + ' ha';
+const aprxPct = x => { const p = x * 100; return p <= 0 ? 'no detectable' : p < 1 ? 'menos de 1 %' : '≈ ' + Math.round(p) + ' %'; };
+const pv = v => v <= 0 ? 'sin dato' : v < 1 ? 'menos de 1 %' : '≈ ' + v + ' %';
 async function getJSON(url) {
-  try { const r = await fetch(url); if (!r.ok) throw new Error('HTTP ' + r.status); return await r.json(); }
+  try { const r = await fetch(url + (String(url).includes('?') ? '&' : '?') + 'v=' + VERSION); if (!r.ok) throw new Error('HTTP ' + r.status); return await r.json(); }
   catch (e) { console.warn('No se pudo cargar', url, e.message); return null; }
 }
 /* Mapas base gratuitos y sin clave (CARTO ya exige clave). */
@@ -84,8 +90,8 @@ function boundsDe(id) {
   return b || parseBounds(BOUNDS_JSON);
 }
 const capaPorId = id => CFG.capas_raster.find(c => c.id === id);
-const urlPng = c => enc(c.png || (CFG.rutas.capas + c.id + '.png'));
-const nombreCapa = c => c.tipo === 'cambio' ? 'Cambio de cobertura 1977 a 2025' : 'Cobertura de la tierra ' + c.anio;
+const urlPng = c => enc(c.png || (CFG.rutas.capas + c.id + '.png')) + '?v=' + VERSION;
+const nombreCapa = c => c.tipo === 'cambio' ? 'Cambio estimado de cobertura 1977 a 2025' : 'Cobertura de la tierra ' + c.anio;
 const COB = () => CFG.capas_raster.filter(c => c.tipo === 'cobertura');
 
 /* ---------- pestañas ---------- */
@@ -124,7 +130,7 @@ function initInicio() {
   const caps = [
     { anio: '1943', hist: true, tipo: 'Documento histórico', titulo: 'Cartografía histórica', texto: 'Documento cartográfico anterior a la primera imagen de satélite. Sirve de contexto: no es una cobertura clasificada.', btn: ['Ver en cartografía temática', () => mostrar('cartografia')], img: 'mapas/cartografia_historica_1943_t.webp' },
     ...cob.map((c, i) => ({ anio: String(c.anio), tipo: 'Dato cartográfico', titulo: c.sensor + ', ' + c.resolucion,
-      texto: A.clases.map(k => k.nombre + ' ' + fmt(k.valores[i]) + ' ha').join('; ') + '.' + (c.anio === 2025 ? ' Cifras de la versión a 30 m, comparable con las demás fechas.' : ''),
+      texto: 'Composición estimada del área comparada: ' + A.clases.map(k => k.nombre + ': ' + aprxPct(k.valores[i] / tot[i])).join('; ') + '.' + (c.sin_info ? ' Las zonas en gris no se pudieron clasificar por nubes o sombras y no se interpretan.' : ''),
       fecha: c.fecha, btn: ['Ver en el geovisor', () => irAlVisor(c.id)], img: c.png || CFG.rutas.capas + c.id + '.png' }))
   ];
   const acc = [['geovisor', 'Geovisor', 'La cobertura de la tierra en cuatro fechas', 'img/fondos/hero4.webp'], ['cartografia', 'Cartografía temática', 'Los mapas del municipio', CFG.bandas.cartografia], ['sitios', 'Territorio y sitios sagrados', 'Lugares y relatos', CFG.bandas.sitios], ['galeria', 'Galería de campo', 'Fotografías de la salida', CFG.bandas.galeria], ['normatividad', 'Normatividad', 'Normas y planes', CFG.bandas.normatividad], ['arte', 'Estado del arte', 'Antecedentes académicos', CFG.bandas.arte], ['metodologia', 'Metodología', 'Cómo se hizo', 'img/fondos/hero1.webp']];
@@ -134,28 +140,28 @@ function initInicio() {
     <div class="hero-in">
       <div>
         <h1><span class="l"><span>De la labranza</span></span> <span class="l"><span>a la expansión:</span></span> <span class="l sub"><span>La Transformación Territorial de Tocancipá</span></span></h1>
-        <p class="lead">Cómo cambió la cobertura del suelo del municipio entre 1977 y 2025, vista en cuatro imágenes de satélite.</p>
+        <p class="lead">Una estimación de cómo cambió la cobertura de la tierra del municipio entre 1977 y 2025, a partir de cuatro imágenes de satélite.</p>
         <div class="acciones"><button class="btn oro" id="ir-visor">Abrir el geovisor</button><button class="btn claro" id="ir-metod">Cómo se hizo</button></div>
       </div>
       <div class="tl" aria-label="Cobertura de la tierra de Tocancipá en las cuatro fechas">
         <div class="tl-marco">${cob.map((c, i) => `<img src="${urlPng(c)}" alt="Cobertura de la tierra de Tocancipá en ${c.anio}" class="${i === 0 ? 'v' : ''}">`).join('')}</div>
         <div class="tl-anio"><b id="tl-anio">${cob[0].anio}</b><span id="tl-sensor">${esc(cob[0].sensor + ', ' + cob[0].resolucion)}</span></div>
-        <ul class="leyenda">${CFG.clases_cobertura.map(k => `<li><span class="sw" style="background:${k.color}"></span>${esc(k.nombre)}</li>`).join('')}</ul>
+        <ul class="leyenda">${CFG.clases_cobertura.map(k => `<li><span class="sw" style="background:${k.color}"></span>${esc(k.nombre)}</li>`).join('')}<li><span class="sw" style="background:${CFG.clase_sin_info.color}"></span>${esc(CFG.clase_sin_info.nombre)}</li></ul>
       </div>
     </div>
     <button class="pausa-hero" id="pausa-hero" aria-pressed="false">Pausar animación</button>
   </div>
   <section class="composicion"><div class="sec-in">
-    <div class="comp-tit"><h2>La tierra en cuatro fechas</h2><p>Entre 1977 y 2025 la vegetación natural perdió cerca de 1.924 ha (−52 %), mientras la zona urbana y la industrial/minera crecieron.</p></div>
-    <div class="tiras" id="tiras">${A.anios.map((a, i) => `<div class="tira"><b>${a}</b><div class="b" role="img" aria-label="${a}: ${A.clases.map(c => c.nombre + ' ' + fmt(c.valores[i]) + ' hectáreas').join(', ')}">${A.clases.map(c => c.valores[i] ? `<span style="--w:${(c.valores[i] / tot[i] * 100).toFixed(2)}%;background:${c.color}" title="${esc(c.nombre)}: ${fmt(c.valores[i])} ha"></span>` : '').join('')}</div></div>`).join('')}</div>
+    <div class="comp-tit"><h2>La tierra en cuatro fechas</h2><p>Sobre el área que pudo compararse (cerca de ${fmt(A.base_ha)} ha, sin nubes en las cuatro imágenes), se estima que entre 1977 y 2025 la vegetación natural disminuyó aproximadamente a la mitad, mientras la zona urbana y la zona industrial o minera (cobertura) aumentaron. Son aproximaciones, no mediciones exactas.</p></div>
+    <div class="tiras" id="tiras">${A.anios.map((a, i) => `<div class="tira"><b>${a}</b><div class="b" role="img" aria-label="${a}: ${A.clases.map(c => c.nombre + ' ' + aprxPct(c.valores[i] / tot[i])).join(', ')}">${A.clases.map(c => c.valores[i] ? `<span style="--w:${(c.valores[i] / tot[i] * 100).toFixed(2)}%;background:${c.color}" title="${esc(c.nombre)}: ${aprxPct(c.valores[i] / tot[i])}"></span>` : '').join('')}</div></div>`).join('')}</div>
     <ul class="leyenda fila">${A.clases.map(c => `<li><span class="sw" style="background:${c.color}"></span>${esc(c.nombre)}</li>`).join('')}</ul>
-    <div class="cifras">${A.clases.map(c => `<div style="--c:${c.color}"><strong>${esc(c.cambio.split(' ')[0])} ha${c.cambio.includes('(') ? ' ' + esc(c.cambio.slice(c.cambio.indexOf('('))) : ''}</strong><span>${esc(c.nombre)}, 1977 a 2025</span></div>`).join('')}</div>
-    <p class="nota-peq">Cada barra suma el área clasificada de su año. Las cifras de 2025 son de la versión a 30 m, comparable con las demás fechas.</p>
+    <div class="cifras">${A.clases.map(c => `<div style="--c:${c.color}"><strong>${esc(ha(c.cambio_ha))}${c.cambio_pct != null && Math.abs(c.cambio_pct) < 100 ? ' (≈ ' + (c.cambio_pct > 0 ? '+' : '−') + Math.abs(c.cambio_pct) + ' %)' : ''}</strong><span>${esc(c.nombre)}, cambio estimado 1977 a 2025</span></div>`).join('')}</div>
+    <p class="nota-peq">Cada barra muestra la composición estimada del área comparada, la parte del municipio libre de nubes en las cuatro fechas. Son valoraciones preliminares y redondeadas: las imágenes tienen distinta resolución (60, 30 y 10 m) y no se aplicó una medida estadística de exactitud.</p>
   </div></section>
   <section class="sec-in">
     <h2>Línea de tiempo</h2>
-    <p>El relato histórico general comprende el periodo 1970 a 2025. El geovisor usa solo las fechas con datos cartográficos verificados: 1977, 2000, 2015 y 2025. Lo anterior se presenta como contexto documental.</p>
-    <ol class="capitulos">${caps.map((c, i) => `<li class="cap"><div class="cap-mapa${c.hist ? ' hist' : ''}"><img src="${enc(c.img)}" alt="${c.hist ? 'Cartografía histórica de 1943' : 'Cobertura de la tierra en ' + c.anio}" loading="lazy"></div><div><span class="anio">${c.anio}</span><h3>${esc(c.titulo)}</h3><p class="tipo">${esc(c.tipo)}${c.fecha ? ', imagen del ' + esc(c.fecha) : ''}</p><p>${esc(c.texto)}</p><button class="sec" data-c="${i}">${esc(c.btn[0])}</button></div></li>`).join('')}</ol>
+    <p>El relato histórico general comprende el periodo 1970 a 2025. El geovisor usa cuatro fechas con imágenes de satélite clasificadas: 1977, 2000, 2015 y 2025. Lo anterior se presenta como contexto documental.</p>
+    <ol class="capitulos">${caps.map((c, i) => `<li class="cap"><div class="cap-mapa${c.hist ? ' hist' : ''}"><img src="${enc(c.img)}?v=${VERSION}" alt="${c.hist ? 'Cartografía histórica de 1943' : 'Cobertura de la tierra en ' + c.anio}" loading="lazy"></div><div><span class="anio">${c.anio}</span><h3>${esc(c.titulo)}</h3><p class="tipo">${esc(c.tipo)}${c.fecha ? ', imagen del ' + esc(c.fecha) : ''}</p><p>${esc(c.texto)}</p><button class="sec" data-c="${i}">${esc(c.btn[0])}</button></div></li>`).join('')}</ol>
   </section>
   <section class="composicion"><div class="sec-in"><h2>Qué encontrarás</h2><div class="accesos">${acc.map(a => `<button class="acc" data-go="${a[0]}" style="background-image:url('${enc(a[3])}')"><strong>${esc(a[1])}</strong><span>${esc(a[2])}</span></button>`).join('')}</div></div></section>`;
   $('#ir-visor').onclick = () => mostrar('geovisor'); $('#ir-metod').onclick = () => mostrar('metodologia');
@@ -174,7 +180,7 @@ const ORDEN = () => COB().map(c => c.id);
 function estado(msg, tipo) { const e = $('#gv-estado'); e.textContent = msg || ''; e.className = 'estado' + (msg ? ' ver ' + (tipo || '') : ''); }
 
 async function initGeovisor() {
-  $('#acerca-texto').textContent = `Este visor muestra cómo cambió la cobertura del suelo en el municipio de Tocancipá entre 1977 y 2025. Las coberturas se obtuvieron clasificando imágenes de satélite de cuatro fechas (7 de enero de 1977, 31 de marzo de 2000, 4 de enero de 2015 y 22 de enero de 2025) en cuatro clases: vegetación natural, cultivos y pastos, zona urbana y zona industrial/minera. Es un insumo del trabajo de grado sobre conflictos territoriales del pueblo Muisca en Tocancipá, de la ${CFG.institucion}.`;
+  $('#acerca-texto').textContent = `Este visor presenta una estimación de cómo cambió la cobertura de la tierra en el municipio de Tocancipá entre 1977 y 2025. Las coberturas se obtuvieron clasificando imágenes de satélite de cuatro fechas (7 de enero de 1977, 31 de marzo de 2000, 4 de enero de 2015 y 22 de enero de 2025) en cuatro clases: vegetación natural, cultivos y pastos, zona urbana y zona industrial o minera (cobertura). Las zonas con nubes o sombras en 1977 y 2015 no se clasificaron y aparecen en gris; las comparaciones entre fechas se hacen solo sobre el área libre de nubes en las cuatro imágenes. Las cifras son aproximaciones, no mediciones exactas, y no se aplicó una medida estadística de exactitud. Es un insumo del trabajo de grado sobre conflictos territoriales del pueblo Muisca en Tocancipá, de la ${CFG.institucion}.`;
   $('#btn-acerca').onclick = () => $('#dlg-acerca').showModal();
   $('#acerca-cerrar').onclick = () => $('#dlg-acerca').close();
   pintarAreas();
@@ -246,12 +252,15 @@ function ponerCapa(lado, id) {
 }
 
 function leyendaHTML(ids) {
-  const tipos = [...new Set(ids.map(i => capaPorId(i).tipo))];
-  return tipos.map(t => {
+  const tipos = [...new Set(ids.map(i => capaPorId(i).tipo))], conGris = ids.some(i => capaPorId(i).sin_info);
+  const SI = CFG.clase_sin_info;
+  const html = tipos.map(t => {
     const items = t === 'cambio' ? CFG.clases_cambio : CFG.clases_cobertura;
     const extra = t === 'cambio' ? '<li><span class="sw vacio"></span>Sin cambio</li>' : '';
-    return `<p class="leg-t">${t === 'cambio' ? 'Cambio 1977 a 2025' : 'Cobertura de la tierra'}</p><ul class="leyenda">${items.map(k => `<li><span class="sw" style="background:${k.color}"></span>${esc(k.nombre)}</li>`).join('')}${extra}</ul>`;
+    const gris = ids.some(i => capaPorId(i).tipo === t && capaPorId(i).sin_info) ? `<li><span class="sw" style="background:${SI.color}"></span>${esc(t === 'cambio' ? SI.nombre_cambio : SI.nombre)}</li>` : '';
+    return `<p class="leg-t">${t === 'cambio' ? 'Cambio estimado 1977 a 2025' : 'Cobertura de la tierra'}</p><ul class="leyenda">${items.map(k => `<li><span class="sw" style="background:${k.color}"></span>${esc(k.nombre)}</li>`).join('')}${extra}${gris}</ul>`;
   }).join('');
+  return html + (conGris ? '<p class="nota-peq">Las zonas en gris no se pudieron clasificar por nubes o sombras en la imagen. No se interpretan.</p>' : '');
 }
 function fichaHTML(c) {
   const f = [['Fecha', c.fecha], ['Sensor', c.sensor], ['Resolución', c.resolucion], ['Composición', c.compuesto], ['Procesamiento', c.nivel], ['Unidad mínima de mapeo', c.umm], ['Nota', c.nota]].filter(x => x[1]);
@@ -299,7 +308,7 @@ function cambiarModo(m) {
 /* capas vectoriales de referencia */
 function initVectores() {
   const lista = CFG.capas_vector, vis = lista.filter(v => v.publicar), ocu = lista.filter(v => !v.publicar);
-  $('#gv-vectores').innerHTML = vis.map(v => `<label class="chk"><input type="checkbox" data-v="${v.id}" ${v.activa ? 'checked' : ''}><span class="sw trazo" style="border-color:${v.color};width:1.4rem"></span><span>${esc(v.nombre)}<small>${esc(v.descripcion)} Fuente: ${esc(v.fuente)}.${v.id === 'division_veredal' ? ' Toca una vereda para ver sus hectáreas por clase.' : ''}</small></span></label>`).join('') +
+  $('#gv-vectores').innerHTML = vis.map(v => `<label class="chk"><input type="checkbox" data-v="${v.id}" ${v.activa ? 'checked' : ''}><span class="sw trazo" style="border-color:${v.color};width:1.4rem"></span><span>${esc(v.nombre)}<small>${esc(v.descripcion)} Fuente: ${esc(v.fuente)}.${v.id === 'division_veredal' ? ' Toca una vereda para ver una estimación de su cobertura.' : ''}</small></span></label>`).join('') +
     (ocu.length ? `<details class="ocultas"><summary>Capas aún no publicadas</summary>${ocu.map(v => `<p><strong>${esc(v.nombre)}.</strong> ${esc(v.motivo_oculta || '')}</p>`).join('')}</details>` : '');
   vis.forEach(v => { vec[v.id] = { cfg: v, on: false, data: null }; });
   $$('#gv-vectores input').forEach(i => i.onchange = () => alternarVec(i.dataset.v, i.checked));
@@ -318,11 +327,12 @@ async function alternarVec(id, on) {
   if (id === 'limite_municipal' && v.A) { try { mapA.fitBounds(v.A.getBounds(), { padding: [10, 10] }); } catch (e) {} }
 }
 function popupVereda(nombre) {
-  const d = AREAS_VER && AREAS_VER[String(nombre).toUpperCase()]; if (!d) return `<div class="vmini"><h4>${esc(nombre)}</h4><p>Sin cifras de área para esta vereda.</p></div>`;
-  const anios = [['1977', '1977'], ['2000', '2000'], ['2015', '2015'], ['2025_30m', '2025 (30 m)']];
-  return `<div class="vmini"><h4>${esc(nombre)}</h4>${anios.map(([k, et]) => { const y = d[k]; if (!y) return ''; const tot = Object.values(y).reduce((a, b) => a + b, 0) || 1;
-    return `<div class="f"><span>${et}</span><div class="b">${CFG.clases_cobertura.map(c => (y[c.codigo] || 0) > 0 ? `<span style="width:${(y[c.codigo] / tot * 100).toFixed(1)}%;background:${c.color}" title="${esc(c.nombre)}: ${fmt(y[c.codigo])} ha"></span>` : '').join('')}</div></div>`; }).join('')}
-    <p class="nota-peq">Hectáreas por clase (pasa el cursor sobre cada tramo). Cifras del archivo areas_por_vereda.</p></div>`;
+  const d = AREAS_VER && AREAS_VER[String(nombre).toUpperCase()]; if (!d) return `<div class="vmini"><h4>${esc(nombre)}</h4><p>Sin estimaciones para esta vereda.</p></div>`;
+  const anios = [['1977', '1977'], ['2000', '2000'], ['2015', '2015'], ['2025', '2025 (30 m)']];
+  const cl = [...CFG.clases_cobertura, { codigo: 5, nombre: CFG.clase_sin_info.nombre, color: CFG.clase_sin_info.color }];
+  return `<div class="vmini"><h4>${esc(nombre)}</h4>${d.aviso ? `<p class="aviso-v">${esc(d.aviso)}</p>` : ''}${anios.map(([k, et]) => { const y = d[k]; if (!y) return ''; const tot = Object.values(y).reduce((a, b) => a + b, 0) || 1;
+    return `<div class="f"><span>${et}</span><div class="b">${cl.map(c => (y[c.codigo] || 0) > 0 ? `<span style="width:${(y[c.codigo] / tot * 100).toFixed(1)}%;background:${c.color}" title="${esc(c.nombre)}: ${pv(y[c.codigo])}"></span>` : '').join('')}</div></div>`; }).join('')}
+    <p class="nota-peq">Estimación aproximada del porcentaje de cada cobertura según la clasificación (pasa el cursor sobre cada tramo). El gris es la parte sin información por nubes o sombras; no se interpreta.</p></div>`;
 }
 function popupProps(p) {
   const claves = Object.keys(p || {}).filter(k => !/cedula|matricula|shape_|objectid|fid_|_id$/i.test(k)).slice(0, 8);
@@ -331,23 +341,23 @@ function popupProps(p) {
 function añadirVec(id) {
   const v = vec[id]; if (!v.data) return;
   const lim = id === 'limite_municipal';
-  const estilo = { color: v.cfg.color, weight: lim ? 3 : 1.6, fill: !lim, fillOpacity: lim ? 0 : .05 };
+  const estilo = { color: v.cfg.color, weight: lim ? 3 : 1.6, fill: !lim, fillOpacity: lim ? 0 : (v.cfg.relleno != null ? v.cfg.relleno : .05), dashArray: v.cfg.sin_popup && id !== 'area_comun' ? '4 3' : null };
   const mk = () => L.geoJSON(v.data, { style: estilo, onEachFeature: (f, l) => {
-    if (lim) return;
+    if (lim || v.cfg.sin_popup) return;
     if (id === 'division_veredal') l.bindPopup(popupVereda(f.properties && f.properties.VER_NOMBRE), { maxWidth: 340 });
     else { const h = popupProps(f.properties); if (h) l.bindPopup(`<strong>${esc(v.cfg.nombre)}</strong>${h}`); } } });
   if (v.A) mapA.removeLayer(v.A); v.A = mk().addTo(mapA);
   if (mapB) { if (v.B) mapB.removeLayer(v.B); v.B = mk().addTo(mapB); }
 }
 
-/* gráfico y tabla de áreas (cifras de la ficha técnica; no se calcula nada) */
+/* gráfico y tabla de áreas: estimaciones redondeadas sobre el área común (no se calcula nada en el navegador) */
 function pintarAreas() {
   const D = CFG.areas_ha, tot = D.anios.map((_, i) => D.clases.reduce((s, c) => s + c.valores[i], 0));
-  $('#graf-areas').innerHTML = D.anios.map((a, i) => `<div class="barra-fila" data-anio="${a}"><span class="barra-anio">${a}${a === 2025 ? ' (30 m)' : ''}</span><div class="barra" role="img" aria-label="${a}: ${D.clases.map(c => c.nombre + ' ' + fmt(c.valores[i]) + ' hectáreas').join(', ')}">${D.clases.map(c => c.valores[i] ? `<span style="width:${c.valores[i] / tot[i] * 100}%;background:${c.color}" title="${esc(c.nombre)}: ${fmt(c.valores[i])} ha"></span>` : '').join('')}</div></div>`).join('') +
+  $('#graf-areas').innerHTML = D.anios.map((a, i) => `<div class="barra-fila" data-anio="${a}"><span class="barra-anio">${a}</span><div class="barra" role="img" aria-label="${a}: ${D.clases.map(c => c.nombre + ' ' + aprxPct(c.valores[i] / tot[i])).join(', ')}">${D.clases.map(c => c.valores[i] ? `<span style="width:${c.valores[i] / tot[i] * 100}%;background:${c.color}" title="${esc(c.nombre)}: ${aprxPct(c.valores[i] / tot[i])}"></span>` : '').join('')}</div></div>`).join('') +
     `<ul class="leyenda fila">${D.clases.map(c => `<li><span class="sw" style="background:${c.color}"></span>${esc(c.nombre)}</li>`).join('')}</ul>`;
-  $('#tabla-areas').innerHTML = `<table><caption class="solo-lector">Área por clase y año, en hectáreas</caption><thead><tr><th>Clase</th>${D.anios.map(a => `<th data-anio="${a}">${a}${a === 2025 ? ' (30 m)' : ''}</th>`).join('')}<th>Cambio 1977 a 2025</th></tr></thead><tbody>${D.clases.map(c => `<tr><th scope="row"><span class="sw" style="background:${c.color}"></span>${esc(c.nombre)}</th>${c.valores.map((x, i) => `<td data-anio="${D.anios[i]}">${fmt(x)}</td>`).join('')}<td>${esc(c.cambio)}</td></tr>`).join('')}</tbody></table>
-  <p class="nota-peq">De 2015 a 2025 crecen la zona urbana (+36 ha, +17,7 %) y la industrial/minera (+69 ha, +18,3 %). La vegetación natural (+2 ha) y los cultivos y pastos (+10 ha) se mantienen estables dentro del margen del método.</p>`;
-  $('#fuente-areas').textContent = 'Fuente: ' + D.fuente + '.';
+  $('#tabla-areas').innerHTML = `<table><caption class="solo-lector">Estimación aproximada de la superficie por clase y año, en hectáreas, sobre el área comparada</caption><thead><tr><th>Clase</th>${D.anios.map(a => `<th data-anio="${a}">${a}</th>`).join('')}<th>Cambio estimado 1977 a 2025</th></tr></thead><tbody>${D.clases.map(c => `<tr><th scope="row"><span class="sw" style="background:${c.color}"></span>${esc(c.nombre)}</th>${c.valores.map((x, i) => `<td data-anio="${D.anios[i]}">${esc(haAbs(x))}</td>`).join('')}<td>${esc(ha(c.cambio_ha))}${c.cambio_pct != null && Math.abs(c.cambio_pct) < 100 ? ' (≈ ' + (c.cambio_pct > 0 ? '+' : '−') + Math.abs(c.cambio_pct) + ' %)' : ''}</td></tr>`).join('')}</tbody></table>
+  <p class="nota-peq">Estimaciones sobre el área común, libre de nubes en las cuatro fechas (cerca de ${fmt(D.base_ha)} ha). Valores redondeados: no son mediciones exactas. Entre 2015 y 2025 la clasificación sugiere un crecimiento moderado de la zona urbana y de la zona industrial o minera (cobertura), y cambios pequeños en la vegetación natural y en los cultivos y pastos, que se interpretan como estabilidad dentro del margen del método. Unas ${fmt(D.sin_info_cambio_ha)} ha del municipio quedan sin información en el mapa de cambios por nubes o sombras.</p>`;
+  $('#fuente-areas').textContent = 'Fuente: ' + D.fuente;
 }
 function resaltarFila(anio) { $$('#tabla-areas [data-anio], #graf-areas [data-anio]').forEach(e => e.classList.toggle('actual', anio != null && +e.dataset.anio === anio)); }
 
@@ -451,20 +461,28 @@ async function initArte() {
 
 /* ---------- METODOLOGÍA (texto de la ficha técnica) ---------- */
 function initMetodologia() {
-  const R = [['1977', '7 de enero de 1977', 'Landsat 1 MSS', '60 m', 'B7 - B5 - B4'], ['2000', '31 de marzo de 2000', 'Landsat 5 TM', '30 m', 'B4 - B3 - B2'], ['2015', '4 de enero de 2015', 'Landsat 8 OLI', '30 m', 'B5 - B4 - B3'], ['2025', '22 de enero de 2025', 'Sentinel-2 MSI, nivel L2A', '10 m', 'B08 - B04 - B03']];
-  const pasos = ['Se construyó el compuesto en falso color de cada imagen y se recortó al límite municipal.', 'Se aplicó una clasificación k-means con 10 clústeres, igual en las cuatro fechas.', 'Se aplicó un filtro sieve de 10 píxeles (conectividad 8) para eliminar parches aislados.', 'Los clústeres se reclasificaron en cuatro clases. Cada clúster se verificó con la herramienta Identificar sobre imagen satelital de referencia (Google Satellite) y conocimiento del territorio. Los números de clúster son independientes en cada año y no se comparan entre fechas.', 'En 2015 y 2025 se corrigieron manualmente, con el complemento Serval de QGIS, las zonas donde la clasificación automática confundía coberturas.', 'En 1977 los clústeres correspondientes a nubes se asignaron a Cultivos y pastos, porque bajo ellas hay cultivos.', 'Para comparar 2025 con 2000 y 2015 se generó una versión de 2025 a 30 m, asignando a cada píxel la clase dominante y aplicando el mismo filtro sieve.'];
-  const lim = ['<strong>Resolución distinta.</strong> Los píxeles miden 60, 30, 30 y 10 m. Con el mismo sieve de 10 píxeles, la unidad mínima de mapeo es de unas 3,6 ha en 1977, 0,9 ha en 2000 y 2015, y 0,1 ha en 2025. Por eso el cambio 2015-2025 se calculó con la versión de 2025 a 30 m.', '<strong>Estacionalidad.</strong> Tres imágenes son de enero (época seca) y la de 2000 es de finales de marzo, cuando suele comenzar la primera temporada de lluvias.', '<strong>1977.</strong> A 60 m no se detectó zona industrial/minera, y las nubes de la imagen se asignaron a Cultivos y pastos. En el mapa de cambio 1977-2025, toda la zona industrial/minera de 2025 aparece como nueva.', '<strong>Confusión entre clases.</strong> El k-means no separa bien la zona urbana de la industrial (techos y concreto) ni la vegetación de los pastos densos. Entre 2015 y 2025 el cambio neto de la vegetación natural es pequeño frente a lo que se intercambia con Cultivos y pastos, así que se interpreta como estabilidad dentro del margen del método.', '<strong>Clasificaciones independientes.</strong> Cada fecha tiene su propio k-means y su propia tabla de reclasificación.'];
-  $('#tab-metodologia').innerHTML = banda('metodologia', 'Metodología', 'Cómo se procesaron las imágenes de satélite y qué límites tienen los resultados.') + `<div class="cuerpo"><div class="metod">
-  <p>Los mapas de cobertura de la tierra del municipio de Tocancipá para 1977, 2000, 2015 y 2025 usan la misma leyenda de cuatro clases y el mismo método, de modo que los cambios entre años sean comparables. El área de estudio es el límite municipal de Tocancipá (Cundinamarca), y los mapas sirven de insumo al trabajo de grado sobre conflictos territoriales de la comunidad indígena muisca.</p>
+  const R = [['1977', '7 de enero de 1977', 'Landsat 1 MSS', '60 m', 'B7 - B5 - B4'], ['2000', '31 de marzo de 2000', 'Landsat 5 TM', '30 m', 'B4 - B3 - B2'], ['2015', '4 de enero de 2015', 'Landsat 8 OLI', '30 m', 'B5 - B4 - B3'], ['2025', '22 de enero de 2025', 'Sentinel-2 MSI, nivel L2A', '10 m (versión a 30 m para comparar)', 'B08 - B04 - B03']];
+  const pasos = ['Se construyó el compuesto en falso color de cada imagen y se recortó al límite municipal.', 'Se aplicó una clasificación k-means con 10 clústeres, igual en las cuatro fechas.', 'Se aplicó un filtro sieve de 10 píxeles (conectividad 8) para eliminar parches aislados.', 'Los clústeres se reclasificaron en cuatro clases. Cada clúster se verificó visualmente con imagen satelital de referencia y conocimiento del territorio. Los números de clúster son independientes en cada año y no se comparan entre fechas.', 'En 2015 y 2025 se corrigieron manualmente, con el complemento Serval de QGIS, las zonas donde la clasificación automática confundía coberturas.', 'En 1977 y 2015 se delimitaron las nubes y sombras. Esas zonas no se clasificaron como cobertura: quedan como «Sin información» (gris) y no se interpretan.', 'Se definió un área común, libre de nubes y sombras en las cuatro fechas (cerca de ' + fmt(CFG.areas_ha.base_ha) + ' ha). Las comparaciones entre fechas, los gráficos y el mapa de cambio se calculan solo sobre ella.', 'Para comparar 2025 con 2000 y 2015 se generó una versión de 2025 a 30 m, asignando a cada píxel la clase dominante y aplicando el mismo filtro sieve.'];
+  const lim = ['<strong>Resolución distinta.</strong> Los píxeles miden 60 m (1977), 30 m (2000 y 2015) y 10 m (2025). Con el mismo filtro sieve, la unidad mínima de mapeo es de unas 3,6 ha en 1977, 0,9 ha en 2000 y 2015, y 0,1 ha en 2025 (0,9 ha en la versión a 30 m).',
+    '<strong>Comparabilidad entre sensores.</strong> Las imágenes proceden de sensores distintos y no tienen el mismo nivel de precisión. Aunque 2025 se llevó de 10 m a 30 m, la diferencia con 1977 (60 m) se mantiene: las coberturas pequeñas, como la zona urbana y la industrial o minera, pueden quedar subestimadas o no detectarse en 1977, lo que tiende a exagerar su crecimiento. Las comparaciones entre 2000, 2015 y 2025 son más consistentes que las que incluyen 1977, y los resultados se leen como tendencias aproximadas, no como diferencias exactas entre fechas.',
+    '<strong>Estacionalidad.</strong> Tres imágenes son de enero (época seca) y la de 2000 es de finales de marzo, cuando suele comenzar la primera temporada de lluvias.',
+    '<strong>1977.</strong> A 60 m no se detectó zona industrial o minera. En el mapa de cambio 1977-2025, toda la zona industrial o minera de 2025 aparece como nueva.',
+    '<strong>Nubes y sombras.</strong> Las zonas cubiertas en 1977 y 2015 no se clasificaron y quedan sin información. Algunas veredas están muy afectadas: en El Porvenir los resultados no son interpretables y en La Fuente son parciales; el visor lo advierte en cada una.',
+    '<strong>Confusión entre clases.</strong> El k-means no separa bien la zona urbana de la industrial (techos y concreto) ni la vegetación de los pastos densos. Además, la «zona industrial o minera (cobertura)» agrupa ambas actividades: la clasificación mide cobertura, no actividad, y no permite saber cuánto corresponde a cada una.',
+    '<strong>Clasificaciones independientes.</strong> Cada fecha tiene su propio k-means y su propia tabla de reclasificación.',
+    '<strong>Sin validación estadística.</strong> No se elaboró una matriz de confusión ni se calculó una medida estadística de exactitud; la verificación fue visual. Por eso las superficies se presentan como estimaciones redondeadas.'];
+  $('#tab-metodologia').innerHTML = banda('metodologia', 'Metodología', 'Cómo se estimaron las coberturas a partir de imágenes de satélite y qué límites tienen los resultados.') + `<div class="cuerpo"><div class="metod">
+  <p>Las estimaciones de cobertura de la tierra del municipio de Tocancipá para 1977, 2000, 2015 y 2025 usan la misma leyenda de cuatro clases y el mismo procedimiento en las cuatro fechas, aunque no el mismo nivel de precisión. El área de estudio es el límite municipal de Tocancipá (Cundinamarca), y los mapas sirven de insumo al trabajo de grado sobre conflictos territoriales de la comunidad indígena muisca. El estudio histórico y documental del trabajo de grado abarca 1970-2025; el análisis de coberturas con imágenes de satélite, 1977-2025.</p>
   <h3>Imágenes utilizadas</h3><div class="tabla-scroll"><table><thead><tr><th>Año</th><th>Fecha de la imagen</th><th>Sensor</th><th>Resolución</th><th>Composición (R-G-B)</th></tr></thead><tbody>${R.map(r => `<tr>${r.map(c => `<td>${esc(c)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>
-  <p>En todas las fechas la composición es en falso color: infrarrojo cercano en el canal rojo, rojo en el verde y verde en el azul. Las imágenes Sentinel-2 L2A y la Landsat de 2015 (L2SP) ya vienen corregidas atmosféricamente; las de 1977 y 2000 (L1TP) no, por lo que sus valores espectrales no son directamente comparables con los de las otras fechas. Se verificó el nivel de procesamiento de las imágenes Landsat en los archivos MTL: nivel 1 (L1TP) en 1977 y 2000, y nivel 2 (L2SP) en 2015.</p>
-  <h3>Método</h3><p>Cada fecha se clasificó de forma no supervisada y luego se verificó a mano contra la realidad del territorio.</p><ol class="pasos">${pasos.map(p => `<li>${esc(p)}</li>`).join('')}</ol>
-  <h3>Clases y colores</h3><div class="dos-col"><div><p class="leg-t">Cobertura (1977, 2000, 2015 y 2025)</p><ul class="leyenda">${CFG.clases_cobertura.map(k => `<li><span class="sw" style="background:${k.color}"></span>${k.codigo}. ${esc(k.nombre)} <code>${k.color}</code></li>`).join('')}</ul></div><div><p class="leg-t">Cambio 1977 a 2025</p><ul class="leyenda">${CFG.clases_cambio.map(k => `<li><span class="sw" style="background:${k.color}"></span>${k.codigo}. ${esc(k.nombre)} <code>${k.color}</code></li>`).join('')}</ul></div></div>
-  <h3>Resultados principales</h3><p>Entre 1977 y 2025 la vegetación natural perdió cerca de 1.924 ha (−52 %), mientras la zona urbana y la industrial/minera crecieron. En el mapa de cambio 1977-2025 las categorías son excluyentes: un píxel que pasó de vegetación a zona urbana o industrial/minera cuenta como zona nueva y no como pérdida de vegetación. Por eso la pérdida del mapa (1.907 ha) es menor que la caída neta de la tabla (1.924 ha). Las cifras de área están en el <a href="#geovisor" data-go="geovisor">geovisor</a>.</p>
-  <h3>Limitaciones</h3><ul>${lim.map(l => `<li>${l}</li>`).join('')}</ul>
-  <h3>Fuentes y sistemas de coordenadas</h3><ul><li>Sentinel-2: producto S2C_MSIL2A_20250122T152721_N0511_R025_T18NXL, descargado de Copernicus.</li><li>Landsat (1977, 2000 y 2015): descargadas de USGS EarthExplorer, Collection 2. 1977 y 2000: nivel 1 (L1TP, Tier 2); 2015: nivel 2 (L2SP, reflectancia de superficie, Tier 1).</li><li>Modelo de ocupación: Acuerdo 09 de 2010 (POT), suministrado por la Secretaría de Planeación de Tocancipá.</li><li>Predial: suministrado por la Secretaría de Planeación de Tocancipá.</li><li>Límite municipal, división veredal y polígono minero (Resolución 2001-2016): suministrados por la Secretaría de Planeación de Tocancipá.</li></ul>
+  <p>En todas las fechas la composición es en falso color: infrarrojo cercano en el canal rojo, rojo en el verde y verde en el azul. Las imágenes Sentinel-2 L2A y la Landsat de 2015 (L2SP) ya vienen corregidas atmosféricamente; las de 1977 y 2000 (L1TP) no, por lo que sus valores espectrales no son directamente comparables con los de las otras fechas.</p>
+  <h3>Método</h3><p>Cada fecha se clasificó de forma no supervisada y luego se verificó visualmente contra imagen de referencia y conocimiento del territorio.</p><ol class="pasos">${pasos.map(p => `<li>${esc(p)}</li>`).join('')}</ol>
+  <h3>Clases y colores</h3><div class="dos-col"><div><p class="leg-t">Cobertura (1977, 2000, 2015 y 2025)</p><ul class="leyenda">${CFG.clases_cobertura.map(k => `<li><span class="sw" style="background:${k.color}"></span>${k.codigo}. ${esc(k.nombre)}</li>`).join('')}<li><span class="sw" style="background:${CFG.clase_sin_info.color}"></span>5. ${esc(CFG.clase_sin_info.nombre)} (solo 1977 y 2015)</li></ul></div><div><p class="leg-t">Cambio estimado 1977 a 2025</p><ul class="leyenda">${CFG.clases_cambio.map(k => `<li><span class="sw" style="background:${k.color}"></span>${k.codigo}. ${esc(k.nombre)}</li>`).join('')}<li><span class="sw vacio"></span>Sin cambio</li><li><span class="sw" style="background:${CFG.clase_sin_info.color}"></span>${esc(CFG.clase_sin_info.nombre_cambio)}</li></ul></div></div>
+  <h3>Resultados principales (valoración preliminar)</h3><p>Sobre el área común se estima que, entre 1977 y 2025, la vegetación natural disminuyó aproximadamente a la mitad, los cultivos y pastos y la zona urbana aumentaron, y la zona industrial o minera (cobertura) pasó de no ser detectable a ocupar una fracción pequeña del área comparada. En el mapa de cambio las categorías son excluyentes: un píxel que pasó de vegetación a zona urbana o industrial o minera cuenta como zona nueva y no como pérdida de vegetación. Las estimaciones están en el <a href="#geovisor" data-go="geovisor">geovisor</a>.</p>
+  <p>Estos resultados describen cambios de cobertura a lo largo del tiempo; no permiten establecer relaciones de causalidad. Cuando se observa una coincidencia espacial o temporal con otras fuentes (por ejemplo, el polígono de la Resolución 2001 de 2016), es una asociación que debe interpretarse con cautela.</p>
+  <h3>Limitaciones</h3><p>Las cifras de cambio deben leerse con las siguientes restricciones del método.</p><ul>${lim.map(l => `<li>${l}</li>`).join('')}</ul>
+  <h3>Fuentes y sistemas de coordenadas</h3><ul><li>Sentinel-2: producto S2C_MSIL2A_20250122T152721_N0511_R025_T18NXL, descargado de Copernicus.</li><li>Landsat (1977, 2000 y 2015): descargadas de USGS EarthExplorer, Collection 2. 1977 y 2000: nivel 1 (L1TP, Tier 2); 2015: nivel 2 (L2SP, reflectancia de superficie, Tier 1).</li><li>Modelo de ocupación: Acuerdo 09 de 2010 (POT), suministrado por la Secretaría de Planeación de Tocancipá.</li><li>Predial: suministrado por la Secretaría de Planeación de Tocancipá.</li><li>Límite municipal, división veredal y polígono minero (Resolución 2001-2016): suministrados por la Secretaría de Planeación de Tocancipá.</li><li>Área común y máscaras de nubes y sombras: elaboración de las autoras.</li></ul>
   <p>Las capas listas para web están en EPSG:4326 (WGS 84); los GeoTIFF conservan su sistema de coordenadas original.</p>
-  <h3>Responsables</h3><p>Elaboración: Alejandra Segura Villarreal y Gabriela Mateus Munévar, ${esc(CFG.institucion)}.</p></div></div>`;
+  <h3>Responsables</h3><p>Elaboración: Alejandra Segura Villarreal y Gabriela Mateus Munévar, ${esc(CFG.institucion)}. Versión del 16 de octubre de 2026, que excluye las nubes y sombras de 1977 y 2015 y compara las fechas solo sobre el área común.</p></div></div>`;
   $$('#tab-metodologia [data-go]').forEach(a => a.onclick = e => { e.preventDefault(); mostrar(a.dataset.go); });
 }
 
